@@ -1,8 +1,3 @@
---Project is being built on a new DB specifically for it
--- Project is on POSTGRESQL
---Project is being undertaken by BERNARD MUOLA
-
-
 -- Create the 'sales' schema
 CREATE SCHEMA IF NOT EXISTS sales;
 
@@ -30,47 +25,58 @@ CREATE TABLE project_sales_001.sales.raw_data (
     Revenue INT
 );
 
+-- Indexes on frequently used columns
+-- Index on 'Country' column
+CREATE INDEX idx_raw_data_country ON project_sales_001.sales.raw_data (Country);
+
+-- Index on 'Year' column
+CREATE INDEX idx_raw_data_year ON project_sales_001.sales.raw_data (Year);
+
+-- Index on 'Product' column
+CREATE INDEX idx_raw_data_product ON project_sales_001.sales.raw_data (Product);
+
 -- Import data from CSV file into the 'raw_data' table
 COPY project_sales_001.sales.raw_data 
 FROM 'C:\Users\Ben\Downloads\sales_data.csv' DELIMITER ',' CSV HEADER;
 
 -- View the data in the 'raw_data' table
-SELECT * FROM project_sales_001.sales.raw_data
--- Create a view to visualize revenue by gender
+SELECT * FROM project_sales_001.sales.raw_data;
+
+-- Materialized view for revenue by gender
 -- 2nd instance input
-CREATE VIEW revenue_by_gender AS
+CREATE MATERIALIZED VIEW revenue_by_gender AS
 SELECT Customer_gender AS Gender,
        SUM(Revenue) AS Total_Revenue
 FROM project_sales_001.sales.raw_data
 GROUP BY Gender;
 
--- Create a view to visualize revenue by country
+-- Materialized view for revenue by country
 -- 3rd instance input
-CREATE VIEW revenue_by_country AS
+CREATE MATERIALIZED VIEW revenue_by_country AS
 SELECT Country,
        SUM(Revenue) AS Total_Revenue
 FROM project_sales_001.sales.raw_data
 GROUP BY Country;
 
--- Create a view to visualize revenue by age group
+-- Materialized view for revenue by age group
 -- 4th instance input
-CREATE VIEW revenue_by_age AS
+CREATE MATERIALIZED VIEW revenue_by_age AS
 SELECT Age_group,
        SUM(Revenue) AS Total_Revenue
 FROM project_sales_001.sales.raw_data
 GROUP BY Age_group;
 
--- Create a view to visualize sales trend over the years
+-- Materialized view for sales trend over the years
 -- 5th instance input
-CREATE VIEW sales_trend AS
+CREATE MATERIALIZED VIEW sales_trend AS
 SELECT Year,
        SUM(Order_quantity) AS Total_Sales
 FROM project_sales_001.sales.raw_data
 GROUP BY Year;
 
--- Create a view to visualize best selling products over the years
+-- Materialized view for best selling products over the years
 -- 6th instance input
-CREATE VIEW best_selling AS
+CREATE MATERIALIZED VIEW best_selling AS
 SELECT Year,
        Product,
        SUM(Order_quantity) AS Total_Quantity
@@ -89,9 +95,9 @@ HAVING SUM(Order_quantity) = (
 )
 ORDER BY Year;
 
--- Create a view to analyze and visualize product subcategories in the country with the least amount of revenue
+-- Materialized view for analyzing and visualizing product subcategories in the country with the least amount of revenue
 -- 7th instance input
-CREATE VIEW investments AS
+CREATE MATERIALIZED VIEW investments AS
 WITH country_revenue AS (
     SELECT Country,
            SUM(Revenue) AS Total_Revenue
@@ -114,9 +120,9 @@ ORDER BY
     Subcategory_Revenue DESC
 LIMIT 3;
 
--- Create a view to analyze and visualize sales in quarters across the years
---8th instance input
-CREATE VIEW sales_on_quarters AS
+-- Materialized view for analyzing and visualizing sales in quarters across the years
+-- 8th instance input
+CREATE MATERIALIZED VIEW sales_on_quarters AS
 SELECT
     Year,
     CASE
@@ -133,9 +139,8 @@ GROUP BY
 ORDER BY
     Quarter;
 
---Now lets view the top five best selling products for every year
+--Now let's view the top five best selling products for every year
 -- 9th instance input
-
 SELECT Year, Product, Revenue
 FROM (
     SELECT Year, Product, SUM(revenue) AS Revenue,
@@ -145,5 +150,3 @@ FROM (
 ) ranked_data
 WHERE rn <= 5
 ORDER BY Year DESC, Revenue DESC;
-
-
