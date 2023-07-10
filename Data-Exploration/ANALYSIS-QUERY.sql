@@ -37,6 +37,7 @@ FROM 'C:\Users\Ben\Downloads\sales_data.csv' DELIMITER ',' CSV HEADER;
 -- View the data in the 'raw_data' table
 SELECT * FROM project_sales_001.sales.raw_data
 -- Create a view to visualize revenue by gender
+-- 2nd instance input
 CREATE VIEW revenue_by_gender AS
 SELECT Customer_gender AS Gender,
        SUM(Revenue) AS Total_Revenue
@@ -44,6 +45,7 @@ FROM project_sales_001.sales.raw_data
 GROUP BY Gender;
 
 -- Create a view to visualize revenue by country
+-- 3rd instance input
 CREATE VIEW revenue_by_country AS
 SELECT Country,
        SUM(Revenue) AS Total_Revenue
@@ -51,6 +53,7 @@ FROM project_sales_001.sales.raw_data
 GROUP BY Country;
 
 -- Create a view to visualize revenue by age group
+-- 4th instance input
 CREATE VIEW revenue_by_age AS
 SELECT Age_group,
        SUM(Revenue) AS Total_Revenue
@@ -58,6 +61,7 @@ FROM project_sales_001.sales.raw_data
 GROUP BY Age_group;
 
 -- Create a view to visualize sales trend over the years
+-- 5th instance input
 CREATE VIEW sales_trend AS
 SELECT Year,
        SUM(Order_quantity) AS Total_Sales
@@ -65,6 +69,7 @@ FROM project_sales_001.sales.raw_data
 GROUP BY Year;
 
 -- Create a view to visualize best selling products over the years
+-- 6th instance input
 CREATE VIEW best_selling AS
 SELECT Year,
        Product,
@@ -85,6 +90,7 @@ HAVING SUM(Order_quantity) = (
 ORDER BY Year;
 
 -- Create a view to analyze and visualize product subcategories in the country with the least amount of revenue
+-- 7th instance input
 CREATE VIEW investments AS
 WITH country_revenue AS (
     SELECT Country,
@@ -109,6 +115,7 @@ ORDER BY
 LIMIT 3;
 
 -- Create a view to analyze and visualize sales in quarters across the years
+--8th instance input
 CREATE VIEW sales_on_quarters AS
 SELECT
     Year,
@@ -127,6 +134,7 @@ ORDER BY
     Quarter;
 
 --Now lets view the top five best selling products for every year
+-- 9th instance input
 
 SELECT Year, Product, Revenue
 FROM (
