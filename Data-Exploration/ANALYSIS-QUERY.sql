@@ -1,7 +1,13 @@
+--Project is being built on a new DB specifically for it
+-- Project is on POSTGRESQL
+--Project is being undertaken by BERNARD MUOLA
+
+
 -- Create the 'sales' schema
 CREATE SCHEMA IF NOT EXISTS sales;
 
 -- Create the 'raw_data' table to store sales data
+-- 1st instance input
 DROP TABLE IF EXISTS project_sales_001.sales.raw_data;
 CREATE TABLE project_sales_001.sales.raw_data (
     Date DATE,
